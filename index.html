@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>暖心提示</title>
+    <style>
+        .note {
+            position: fixed;
+            padding: 15px 25px;
+            background-color: pink;
+            border-radius: 8px;
+            font-family: "楷体", serif;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            cursor: move; /* 鼠标可拖动样式 */
+            user-select: none; /* 禁止选中文本 */
+        }
+        /* 适配移动端 */
+        @media (max-width: 768px) {
+            .note {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        function createNote() {
+            // 随机提示文字（新增更多暖心提示）
+            const texts = [
+                '记得加衣！', '记得照顾好自己', '天天开心', 
+                '好好吃饭', '早点休息', '别感冒',
+                '要一直幸福呀～', '多喝水哦', '保持微笑😊',
+                '再忙也要照顾好自己', '今天也要元气满满', '记得想我哦'
+            ];
+            const text = texts[Math.floor(Math.random() * texts.length)];
+            
+            // 随机背景颜色（新增更多色彩）
+            const colors = [
+                'pink', 'lightskyblue', 'lightgreen', 
+                'lavender', 'lightyellow', 'darkviolet', 'orange',
+                'paleturquoise', 'plum', 'gold'
+            ];
+            const bg = colors[Math.floor(Math.random() * colors.length)];
+            
+            // 随机位置（适配不同屏幕尺寸）
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const left = Math.floor(Math.random() * (width - 180));
+            const top = Math.floor(Math.random() * (height - 80));
+            
+            // 创建提示框
+            const note = document.createElement('div');
+            note.className = 'note';
+            note.style.left = `${left}px`;
+            note.style.top = `${top}px`;
+            note.style.backgroundColor = bg;
+            note.innerText = text;
+            document.body.appendChild(note);
+            
+            // 鼠标拖动功能
+            let isDragging = false;
+            let offsetX, offsetY;
+            note.onmousedown = (e) => {
+                isDragging = true;
+                offsetX = e.clientX - note.getBoundingClientRect().left;
+                offsetY = e.clientY - note.getBoundingClientRect().top;
+            };
+            document.onmousemove = (e) => {
+                if (isDragging) {
+                    note.style.left = `${e.clientX - offsetX}px`;
+                    note.style.top = `${e.clientY - offsetY}px`;
+                }
+            };
+            document.onmouseup = () => {
+                isDragging = false;
+            };
+            // 移动端触摸拖动
+            note.ontouchstart = (e) => {
+                isDragging = true;
+                offsetX = e.touches[0].clientX - note.getBoundingClientRect().left;
+                offsetY = e.touches[0].clientY - note.getBoundingClientRect().top;
+            };
+            document.ontouchmove = (e) => {
+                if (isDragging) {
+                    note.style.left = `${e.touches[0].clientX - offsetX}px`;
+                    note.style.top = `${e.touches[0].clientY - offsetY}px`;
+                }
+            };
+            document.ontouchend = () => {
+                isDragging = false;
+            };
+        }
+
+        // 页面加载后自动生成100个提示框
+        window.onload = () => {
+            const count = 1000; // 生成100个提示框
+            for (let i = 0; i < count; i++) {
+                setTimeout(createNote, i * 100); // 每隔100ms生成一个
+            }
+        };
+    </script>
+</body>
+</html>
